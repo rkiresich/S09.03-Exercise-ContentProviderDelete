@@ -310,19 +310,23 @@ public class WeatherProvider extends ContentProvider {
 
         int match = sUriMatcher.match(uri);
         int deletedRows = 0;
-
+        if(selection == null){
+            selection = "1";
+        }
 //          TODO (2) Only implement the functionality, given the proper URI, to delete ALL rows in the weather table
             //COMPLETE
         switch (match){
             case CODE_WEATHER:
-                deletedRows = db.delete(WeatherContract.WeatherEntry.TABLE_NAME, null, selectionArgs);
+                deletedRows = db.delete(WeatherContract.WeatherEntry.TABLE_NAME, selection, selectionArgs);
                 break;
                 default:
                     throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 //      TODO (3) Return the number of rows deleted
         //COMPLETE
-        getContext().getContentResolver().notifyChange(uri, null);
+        if(deletedRows != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return deletedRows;
     }
 
